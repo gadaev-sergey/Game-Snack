@@ -69,7 +69,7 @@ function createFigure(number) {
     const figure = document.createElement('div')
     cell.classList.add('game__cell', 'game__cell--pos')
     figure.classList.add('game__figure')
-    figure.style.backgroundImage = `url('../img/game/figure/${number}.png')`
+    figure.style.backgroundImage = `url('img/game/figure/${number}.png')`
     cell.append(figure)
     return cell
 }

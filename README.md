@@ -22,7 +22,7 @@
 ## Gulp - сборка MaxGraph
 > Используется Gulp 4
 
-[github.com/maxdenaro/gulp-maxgraph](https://github.com/maxdenaro/gulp-maxgraph)
+[github.com/maxdenaro/gulp-maxgraph](https://github.com/maxdenaro/gulp-maxgraph)<br>
 Находясь в корне проекта, запустите команду `npm i`, которая установит все находящиеся в package.json зависимости.
 `gulp` - базовая команда, которая запускает сборку для разработки, используя browser-sync
 
