@@ -9,7 +9,7 @@ export function randomCol() {
     return randomCol()
 }
 
-export function randomFigure(max = 7, min = 1) {
+export function randomFigure(max = 3, min = 1) {
     const range = max - min
     return Math.round(Math.random() * range + min)
 }
