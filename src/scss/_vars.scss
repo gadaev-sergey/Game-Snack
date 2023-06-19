@@ -1,0 +1,37 @@
+// если вы хотите использовать sass-переменные - удалите root
+// colors
+:root {
+  // base
+  --font-family: "Raleway", sans-serif;
+  --content-width: 1170px;
+  --container-offset: 15px;
+  --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
+
+  // padding
+  --section-p: 50px 0;
+
+  @media (max-width: 768px) {
+    --section-p: 20px 0;
+  }
+
+  // colors
+  --light: #fff;
+  --accient-blue: #007ACC;
+  --light-blue: #1196F0;
+  --harg-blue: #0068AD;
+  --green: #219653;
+  --light-green: #3bb570;
+  --hard-green: #1b7040;
+  --orange: #F2994A;
+  --grey-100: #E9E9E9;
+  --grey-200: #C1C1C1;
+  --grey-500: #3E3E42;
+  --grey-600: #2D2D30;
+  --grey-700: #252526;
+  --grey-800: #1E1E1E;
+
+  // social networks
+  --color-vk: #0077FF;
+  --color-telegram: #0088cc;
+  --color-youtube: #c4302b;
+}

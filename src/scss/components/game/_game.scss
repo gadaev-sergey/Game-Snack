@@ -1,0 +1,59 @@
+.game {
+  width: max-content;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+
+  &__box-grid {
+    will-change: transform;
+  }
+
+  &__grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+  }
+
+  &__row {
+      display: flex;
+      gap: 2px;
+  }
+
+  &__cell {
+      width: 50px;
+      height: 50px;
+
+      background-color: #fff;
+      border-radius: 8px;
+
+      &--pos {
+          position: relative;
+      }
+  }
+
+  &__figure {
+      position: absolute;
+      left: 0;
+
+      width: 50px;
+      height: 50px;
+
+      background-color: burlywood;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 8px;
+
+      transition: left .05s ease-in-out, right .05s ease-in-out;
+  }
+}
+
+.anim-down {
+  animation: down var(--speed) forwards linear;
+}
+
+@keyframes down {
+  to {transform: translateY(52px);}
+}

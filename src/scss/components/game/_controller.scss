@@ -1,0 +1,9 @@
+.game-controller {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__btn {
+      cursor: pointer;
+  }
+}
