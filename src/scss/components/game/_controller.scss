@@ -5,5 +5,13 @@
 
   &__btn {
       cursor: pointer;
+      transition: transform .05s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+      &:active {
+        transform: scale(0.95);
+      }
   }
 }

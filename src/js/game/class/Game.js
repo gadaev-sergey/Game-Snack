@@ -67,17 +67,20 @@ export default class Game {
         }
     }
 
+    async _startRules() {
+        this._renderGrid()
+        await this.rules.check(this.grid)
+        // await this._checkRules()
+        const promises = await this.rules.drop(this.grid)
+        if (promises.includes(true)) {
+            await this._startRules()
+        }
+    }
+
     async _checkRules() {
-        const check = this.rules.check()
+        const check = await this.rules.check(this.grid)
         if (check) {
-            this._renderGrid()
-            const promises = await this.rules.drop(this.grid)
-            if (promises.includes(true)) {
-                console.log('повтор')
-                this._renderGrid()
-                await this.rules.drop(this.grid) // TODO  нужно сделать рекурсию
-                await this._checkRules()
-            }
+            await this._startRules()
         }
     }
 

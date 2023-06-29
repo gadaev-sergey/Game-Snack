@@ -1,20 +1,23 @@
 import state from "../state"
+import anime from 'animejs/lib/anime.es.js';
 
 export default class Rules {
     constructor() {
         this.isChange = false
     }
 
-    check() {
+    async check(grid) {
         this.isChange = false
-        this._checkRow()
-        this._checkCol()
+        await this._checkRow(grid)
+        await this._checkCol(grid)
 
         return this.isChange
     }
 
-    _checkCol() {
+    async _checkCol(grid) {
         const countCol = []
+        const iterable = []
+        const gridClearElements = []
         state.tetrisGrid[0].forEach((row, rowIndex) => {
             countCol.push(rowIndex)
         })
@@ -49,6 +52,11 @@ export default class Rules {
                     third.elem == fourth.elem) {
                         this.isChange = true
                         // TODO create promise scale items
+                        const promise = new Promise((resolve, reject) => {
+
+                        })
+                        iterable.push(promise)
+
                         state.tetrisGrid[first.rowIndex][first.colIndex] = 0
                         state.tetrisGrid[second.rowIndex][second.colIndex] = 0
                         state.tetrisGrid[third.rowIndex][third.colIndex] = 0
@@ -58,13 +66,15 @@ export default class Rules {
         })
     }
 
-    _checkRow() {
-        state.tetrisGrid.forEach((row, rowIndex) => {
+    async _checkRow(grid) {
+        const iterable = []
+        const gridClearElements = []
+        state.tetrisGrid.forEach(async (row, rowIndex) => {
             let first = {elem: null, elemIndex: null}
             let second = {elem: null, elemIndex: null}
             let third = {elem: null, elemIndex: null}
             let fourth = {elem: null, elemIndex: null}
-            row.forEach((elem, elemIndex) => {
+            row.forEach(async (elem, elemIndex) => {
                 first = second
                 second = third
                 third = fourth
@@ -74,14 +84,34 @@ export default class Rules {
                     second.elem == third.elem &&
                     third.elem == fourth.elem) {
                         this.isChange = true
-                        // TODO create promise scale items
-                        row[first.elemIndex] = 0
-                        row[second.elemIndex] = 0
-                        row[third.elemIndex] = 0
-                        row[fourth.elemIndex] = 0
+                        const promise = new Promise((resolve, reject) => {
+                            gridClearElements.push(first.elemIndex, second.elemIndex, third.elemIndex, fourth.elemIndex)
+                            const animation = anime.timeline({
+                                targets: [
+                                    grid.children[rowIndex].children[first.elemIndex].children[0],
+                                    grid.children[rowIndex].children[second.elemIndex].children[0],
+                                    grid.children[rowIndex].children[third.elemIndex].children[0],
+                                    grid.children[rowIndex].children[fourth.elemIndex].children[0],
+                                ],
+                                duration: state.cleanupAnimationDuration,
+                                easing: 'linear'
+                            }).add({
+                                scale: 0,
+                                opacity: 0,
+                            })
+                            animation.finished.then(() => {
+                                gridClearElements.forEach(elem => {
+                                    row[elem] = 0
+                                })
+                                // TODO добавить начисление очков
+                                resolve()
+                            })
+                        })
+                        iterable.push(promise)
                 }
             })
         });
+        await Promise.all(iterable);
     }
 
     drop(grid) {
@@ -95,7 +125,6 @@ export default class Rules {
                     if (isNextRow) {
                         const isNextElem = isNextRow.children[indexCol]
                         if (!isNextElem.children[0]) {
-                            console.log('Im found')
                             const target = {
                                 elem: elem,
                                 posRow: indexRow,
@@ -114,7 +143,7 @@ export default class Rules {
     _moveDown(item) {
         const target = item.elem.children[0]
         const promise = new Promise((resolve, reject) => {
-            target.style.setProperty('--speed', 0.1 + 's')
+            target.style.setProperty('--speed', state.dropAnimationDuration + 'ms')
             target.classList.add('anim-down')
             target.addEventListener('animationend', () => {
                 const figure = state.tetrisGrid[item.posRow][item.posCol]
