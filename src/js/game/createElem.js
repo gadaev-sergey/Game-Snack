@@ -1,27 +1,55 @@
 import state from "./state"
 import vars from "./vars"
 
+export function createBoxBoard() {
+    const boxBoard = document.createElement('div')
+    boxBoard.classList.add('game__box-board')
+
+    return boxBoard
+}
+
+export function createBoard() {
+    const board = document.createElement('div')
+    const user = document.createElement('div')
+    const points = document.createElement('div')
+    const pointsDesc = document.createElement('div')
+    const lvl = document.createElement('div')
+    const lvlDesc = document.createElement('div')
+
+    board.classList.add('game__board')
+    user.classList.add('game__user')
+    points.classList.add('game__points')
+    pointsDesc.classList.add('game__desc')
+    lvl.classList.add('game__lvl')
+    lvlDesc.classList.add('game__desc')
+
+    user.textContent = 'user'
+    pointsDesc.textContent = 'points'
+    lvlDesc.textContent = 'lvl'
+
+    board.append(user, points, pointsDesc, lvl, lvlDesc)
+
+    return {board, user, points, lvl}
+}
+
 export function createController() {
     const container = document.createElement('div')
     const left = document.createElement('div')
     const down = document.createElement('div')
-    const rotation = document.createElement('div')
     const right = document.createElement('div')
 
     container.classList.add('game-controller')
     left.classList.add('game-controller__btn')
     down.classList.add('game-controller__btn')
-    rotation.classList.add('game-controller__btn')
     right.classList.add('game-controller__btn')
 
     left.innerHTML = vars.svg.left
     down.innerHTML = vars.svg.down
-    rotation.innerHTML = vars.svg.rotation
     right.innerHTML = vars.svg.right
 
-    container.append(left, down, rotation, right)
+    container.append(left, down, right)
 
-    return {container, left, down, rotation, right}
+    return {container, left, down, right}
 }
 
 export function createBoxGrid() {

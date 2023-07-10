@@ -1,8 +1,14 @@
 export default {
     isPlay: false,
+    isControllerAllowed: true,
     fallingSpeed: 300,
     cleanupAnimationDuration: 150,
     dropAnimationDuration: 100,
+    addAnimationDuration: 300,
+    userName: 'user',
+    points: 0,
+    lvl: 1,
+    maxFigure: 2,
     tetrisGrid: [
         [0, 0, 0, 0, 0, 0, 0,],
         [0, 0, 0, 0, 0, 0, 0,],

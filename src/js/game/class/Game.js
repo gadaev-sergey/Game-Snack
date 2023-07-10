@@ -1,6 +1,7 @@
-import { createGrid, createBoxGrid, createController, createBoxController } from "../createElem"
+import { createBoxBoard, createBoard, createGrid, createBoxGrid, createController, createBoxController } from "../createElem"
 import { randomCol, randomFigure } from "../help"
 import { animLeft, animRight } from "../anim"
+import anime from 'animejs/lib/anime.es.js';
 import state from "../state"
 
 export default class Game {
@@ -8,6 +9,8 @@ export default class Game {
         this.container = container
         this.user = user
         this.rules = rules
+        this.boxBoard = createBoxBoard(),
+        this.board = createBoard(),
         this.boxGrid = createBoxGrid()
         this.grid = createGrid()
         this.boxController = createBoxController()
@@ -17,14 +20,17 @@ export default class Game {
         this.currentRow = 0
         this.currentFallingSpeed = state.fallingSpeed
         this.figure = 0
+        this.userName = this.board.user
+        this.points = this.board.points
+        this.lvl = this.board.lvl
         this._render()
         this._hendler()
     }
 
-    start() {
+    async start() {
         this._addFigure()
         this._renderGrid()
-        this._moveFigure()
+        await this._moveFigure()
     }
 
     _addFigure() {
@@ -42,6 +48,29 @@ export default class Game {
         const isGameOver = state.tetrisGrid[0].every(elem => elem !== 0)
 
         this.currentColElem = this.currentCol
+
+        if (this.currentRow === 0) {
+            state.isControllerAllowed = false
+            const target = this.grid.children[this.currentRow].children[this.currentColElem].children[0]
+            target.style.transform = 'scale(0)'
+            const promise = await new Promise((resolve, reject) => {
+                const animation = anime({
+                    targets: [
+                        target,
+                    ],
+                    keyframes: [
+                        {scale: 0, opacity: 0},
+                        {scale: 1, opacity: 1},
+                      ],
+                    duration: state.addAnimationDuration,
+                    easing: 'linear'
+                })
+                animation.finished.then(() => {
+                    state.isControllerAllowed = true
+                    resolve()
+                })
+            })
+        }
 
         if (isRow && isCol) {
             const elem = this.grid.children[this.currentRow].children[this.currentCol].children[0]
@@ -70,7 +99,6 @@ export default class Game {
     async _startRules() {
         this._renderGrid()
         await this.rules.check(this.grid)
-        // await this._checkRules()
         const promises = await this.rules.drop(this.grid)
         if (promises.includes(true)) {
             await this._startRules()
@@ -90,12 +118,24 @@ export default class Game {
         this.boxGrid.append(this.grid)
     }
 
+    _renderPoints() {
+        this.points.textContent = state.points
+    }
+
+    _renderLvl() {
+        this.lvl.textContent = state.lvl
+    }
+
     _render() {
         this.container.classList.add('game')
         this.container.innerHTML = ''
+        this.userName.textContent = state.userName
+        this._renderPoints()
+        this._renderLvl()
+        this.boxBoard.append(this.board.board)
         this._renderGrid()
         this.boxController.append(this.controller.container)
-        this.container.append(this.boxGrid, this.boxController)
+        this.container.append(this.boxBoard, this.boxGrid, this.boxController)
     }
 
     _updateSpeed() {
@@ -104,18 +144,26 @@ export default class Game {
         elem ? elem.style.setProperty('--speed', value) : null
     }
 
-    _hendler() {
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowLeft') this._moveLeft()
-            if (event.key === 'ArrowDown') this._moveDown()
-            if (event.key === 'ArrowUp') this._moveRotation()
-            if (event.key === 'ArrowRight') this._moveRight()
-        })
+    _hendler(remove = false) {
+        const keydownHendler = (event) => {
+            if (event.key === 'ArrowLeft' && state.isControllerAllowed) this._moveLeft()
+            if (event.key === 'ArrowDown' && state.isControllerAllowed) this._moveDown()
+            if (event.key === 'ArrowRight' && state.isControllerAllowed) this._moveRight()
+        }
+        const left = () => {
+            if (state.isControllerAllowed) this._moveLeft()
+        }
+        const down = () => {
+            if (state.isControllerAllowed) this._moveDown()
+        }
+        const right = () => {
+            if (state.isControllerAllowed) this._moveRight()
+        }
 
-        this.controller.left.addEventListener('click', () => this._moveLeft())
-        this.controller.down.addEventListener('click', () => this._moveDown())
-        this.controller.rotation.addEventListener('click', () => this._moveRotation())
-        this.controller.right.addEventListener('click', () => this._moveRight())
+        window.addEventListener('keydown', keydownHendler)
+        this.controller.left.addEventListener('click', left)
+        this.controller.down.addEventListener('click', down)
+        this.controller.right.addEventListener('click', right)
     }
 
     _moveLeft() {
@@ -145,9 +193,5 @@ export default class Game {
     _moveDown() {
         state.fallingSpeed = 10
         this._updateSpeed()
-    }
-
-    _moveRotation() {
-        console.log("rotation")
     }
 }

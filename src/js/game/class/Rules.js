@@ -51,19 +51,34 @@ export default class Rules {
                     second.elem == third.elem &&
                     third.elem == fourth.elem) {
                         this.isChange = true
-                        // TODO create promise scale items
                         const promise = new Promise((resolve, reject) => {
-
+                            gridClearElements.push(first, second, third, fourth)
+                            const animation = anime.timeline({
+                                targets: [
+                                    grid.children[first.rowIndex].children[first.colIndex].children[0],
+                                    grid.children[second.rowIndex].children[second.colIndex].children[0],
+                                    grid.children[third.rowIndex].children[third.colIndex].children[0],
+                                    grid.children[fourth.rowIndex].children[fourth.colIndex].children[0],
+                                ],
+                                duration: state.cleanupAnimationDuration,
+                                easing: 'linear'
+                            }).add({
+                                scale: 0,
+                                opacity: 0,
+                            })
+                            animation.finished.then(() => {
+                                gridClearElements.forEach(elem => {
+                                    state.tetrisGrid[elem.rowIndex][elem.colIndex] = 0
+                                })
+                                // TODO добавить начисление очков
+                                resolve()
+                            })
                         })
                         iterable.push(promise)
-
-                        state.tetrisGrid[first.rowIndex][first.colIndex] = 0
-                        state.tetrisGrid[second.rowIndex][second.colIndex] = 0
-                        state.tetrisGrid[third.rowIndex][third.colIndex] = 0
-                        state.tetrisGrid[fourth.rowIndex][fourth.colIndex] = 0
                 }
             })
         })
+        await Promise.all(iterable);
     }
 
     async _checkRow(grid) {
