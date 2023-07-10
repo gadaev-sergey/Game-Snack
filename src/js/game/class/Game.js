@@ -7,8 +7,6 @@ import state from "../state"
 export default class Game {
     constructor(container, user, rules) {
         this.container = container
-        this.user = user
-        this.rules = rules
         this.boxBoard = createBoxBoard(),
         this.board = createBoard(),
         this.boxGrid = createBoxGrid()
@@ -18,11 +16,12 @@ export default class Game {
         this.currentCol = randomCol()
         this.currentColElem = this.currentCol
         this.currentRow = 0
-        this.currentFallingSpeed = state.fallingSpeed
         this.figure = 0
         this.userName = this.board.user
         this.points = this.board.points
         this.lvl = this.board.lvl
+        this.user = user
+        this.rules = rules
         this._render()
         this._hendler()
     }
@@ -34,7 +33,7 @@ export default class Game {
     }
 
     _addFigure() {
-        state.fallingSpeed = this.currentFallingSpeed
+        state.fallingSpeed = state.currentFallingSpeed
         this._updateSpeed()
         this.figure = randomFigure()
         state.tetrisGrid[this.currentRow][this.currentCol] = this.figure
@@ -98,6 +97,7 @@ export default class Game {
 
     async _startRules() {
         this._renderGrid()
+        this._renderLvl()
         await this.rules.check(this.grid)
         const promises = await this.rules.drop(this.grid)
         if (promises.includes(true)) {

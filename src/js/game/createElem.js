@@ -23,6 +23,8 @@ export function createBoard() {
     lvl.classList.add('game__lvl')
     lvlDesc.classList.add('game__desc')
 
+    points.id = 'game-points'
+
     user.textContent = 'user'
     pointsDesc.textContent = 'points'
     lvlDesc.textContent = 'lvl'

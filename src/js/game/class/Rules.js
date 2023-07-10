@@ -4,6 +4,66 @@ import anime from 'animejs/lib/anime.es.js';
 export default class Rules {
     constructor() {
         this.isChange = false
+        this.boardPoints = document.getElementById('game-points')
+    }
+
+    _addPoints() {
+        let number
+        let lvl
+        let speed
+        let maxFigure
+
+        if (state.points < 300) {
+            number = 60
+            lvl = 1
+            speed = 300
+            maxFigure = 3
+        }
+        if (state.points >= 300 && state.points < 675) {
+            number = 75
+            lvl = 2
+            speed = 260
+            maxFigure = 4
+        }
+        if (state.points >= 675 && state.points < 1215) {
+            number = 90
+            lvl = 3
+            speed = 220
+            maxFigure = 5
+        }
+        if (state.points >= 1215 && state.points < 2415) {
+            number = 120
+            lvl = 4
+            speed = 180
+            maxFigure = 6
+        }
+        if (state.points >= 2415 && state.points < 3915) {
+            number = 150
+            lvl = 5
+            speed = 160
+            maxFigure = 7
+        }
+        if (state.points >= 3915) {
+            number = 190
+            lvl = 6
+            speed = 120
+            maxFigure = 7
+        }
+
+        anime({
+            targets: '.game__points',
+            innerHTML: [state.points, state.points + number],
+            easing: 'linear',
+            round: 1,
+        });
+
+        state.points += number
+        if (state.lvl !== lvl) state.lvl = lvl
+        if (state.fallingSpeed !== speed) {
+            state.fallingSpeed = speed
+            state.currentFallingSpeed = speed
+        }
+        if (state.maxFigure !== maxFigure) state.maxFigure = maxFigure
     }
 
     async check(grid) {
@@ -70,7 +130,7 @@ export default class Rules {
                                 gridClearElements.forEach(elem => {
                                     state.tetrisGrid[elem.rowIndex][elem.colIndex] = 0
                                 })
-                                // TODO добавить начисление очков
+                                this._addPoints()
                                 resolve()
                             })
                         })
@@ -118,7 +178,7 @@ export default class Rules {
                                 gridClearElements.forEach(elem => {
                                     row[elem] = 0
                                 })
-                                // TODO добавить начисление очков
+                                this._addPoints()
                                 resolve()
                             })
                         })
