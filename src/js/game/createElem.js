@@ -25,7 +25,6 @@ export function createBoard() {
 
     points.id = 'game-points'
 
-    user.textContent = 'user'
     pointsDesc.textContent = 'points'
     lvlDesc.textContent = 'lvl'
 
