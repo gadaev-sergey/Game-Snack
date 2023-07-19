@@ -16,37 +16,37 @@ export default class Rules {
         if (state.points < 300) {
             number = 60
             lvl = 1
-            speed = 300
+            speed = 400
             maxFigure = 3
         }
         if (state.points >= 300 && state.points < 675) {
             number = 75
             lvl = 2
-            speed = 260
+            speed = 360
             maxFigure = 4
         }
         if (state.points >= 675 && state.points < 1215) {
             number = 90
             lvl = 3
-            speed = 220
+            speed = 320
             maxFigure = 5
         }
         if (state.points >= 1215 && state.points < 2415) {
             number = 120
             lvl = 4
-            speed = 180
+            speed = 280
             maxFigure = 6
         }
         if (state.points >= 2415 && state.points < 3915) {
             number = 150
             lvl = 5
-            speed = 160
+            speed = 260
             maxFigure = 7
         }
         if (state.points >= 3915) {
             number = 190
             lvl = 6
-            speed = 120
+            speed = 220
             maxFigure = 7
         }
 

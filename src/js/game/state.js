@@ -6,8 +6,9 @@ export default {
     cleanupAnimationDuration: 150,
     dropAnimationDuration: 100,
     addAnimationDuration: 300,
-    userName: 'user',
+    userName: '',
     points: 0,
+    maxPoints: 0,
     lvl: 1,
     maxFigure: 3,
     tetrisGrid: [

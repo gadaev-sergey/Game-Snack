@@ -1,4 +1,4 @@
-import { createBoxBoard, createBoard, createGrid, createBoxGrid, createController, createBoxController } from "../createElem"
+import { createBoxBoard, createBoard, createGrid, createBoxGrid, createController, createBoxController, gameOver } from "../createElem"
 import { randomCol, randomFigure } from "../help"
 import { animLeft, animRight } from "../anim"
 import anime from 'animejs/lib/anime.es.js';
@@ -30,6 +30,10 @@ export default class Game {
         this._addFigure()
         this._renderGrid()
         await this._moveFigure()
+    }
+
+    renderName() {
+        this.userName.textContent = state.userName
     }
 
     _addFigure() {
@@ -83,9 +87,16 @@ export default class Game {
                 this._moveFigure()
             })
         } else if (isGameOver) {
-            setTimeout(() => {
-                alert("Game Over")
-            }, 100)
+            anime({
+                targets: '.game__grid .game__cell',
+                scale: [
+                  {value: .1, easing: 'easeOutSine', duration: 500},
+                  {value: 1, easing: 'easeInOutQuad', duration: 1200}
+                ],
+                loop: true,
+                delay: anime.stagger(200, {grid: [7, 10], from: 'center'})
+            });
+            this.container.append(gameOver())
         }
         else {
             await this._checkRules()
@@ -103,6 +114,7 @@ export default class Game {
         if (promises.includes(true)) {
             await this._startRules()
         }
+        this.user.savePoints()
     }
 
     async _checkRules() {
@@ -128,7 +140,6 @@ export default class Game {
 
     _render() {
         this.container.classList.add('game')
-        this.container.innerHTML = ''
         this.userName.textContent = state.userName
         this._renderPoints()
         this._renderLvl()
@@ -146,9 +157,36 @@ export default class Game {
 
     _hendler(remove = false) {
         const keydownHendler = (event) => {
-            if (event.key === 'ArrowLeft' && state.isControllerAllowed) this._moveLeft()
-            if (event.key === 'ArrowDown' && state.isControllerAllowed) this._moveDown()
-            if (event.key === 'ArrowRight' && state.isControllerAllowed) this._moveRight()
+            if (event.key === 'ArrowLeft' && state.isControllerAllowed) {
+                anime({
+                    targets: [this.controller.left],
+                    duration: 50,
+                    easing: 'easeInQuad',
+                    scale: .65,
+                    direction: 'alternate',
+                })
+                this._moveLeft()
+            }
+            if (event.key === 'ArrowDown' && state.isControllerAllowed) {
+                anime({
+                    targets: [this.controller.down],
+                    duration: 50,
+                    easing: 'easeInQuad',
+                    scale: .65,
+                    direction: 'alternate',
+                })
+                this._moveDown()
+            }
+            if (event.key === 'ArrowRight' && state.isControllerAllowed) {
+                anime({
+                    targets: [this.controller.right],
+                    duration: 50,
+                    easing: 'easeInQuad',
+                    scale: .65,
+                    direction: 'alternate',
+                })
+                this._moveRight()
+            }
         }
         const left = () => {
             if (state.isControllerAllowed) this._moveLeft()

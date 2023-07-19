@@ -1,10 +1,13 @@
 .popup {
     position: fixed;
     inset: 0;
+    z-index: 100;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    background: repeating-linear-gradient(45deg, black, rgb(22 22 22) 16px);
 
     &__wrapper {
         position: relative;
@@ -15,7 +18,118 @@
         flex-direction: column;
         align-items: center;
         gap: 20px;
+        max-width: 310px;
 
         color: white;
+    }
+
+    &__title {
+        font-family: 'Inter', sans-serif;
+        font-size: 24px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    &__desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 18px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__input {
+        padding: 8px 12px;
+
+        text-align: center;
+
+        border: 2px solid white;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.208);
+
+        transition: box-shadow .2s ease-in-out, transform .2s ease-in-out, border .2s ease-in-out;
+
+        &::placeholder {
+            transition: opacity .2s ease-in-out;
+        }
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: 0px 0px 15px rgba(0, 255, 47, 0.539);
+            border-color: #00ff00bd;
+
+            &::placeholder {
+                opacity: 0;
+            }
+        }
+
+        &:hover {
+            &::placeholder {
+                opacity: .2;
+            }
+        }
+    }
+
+    &__btn {
+        padding: 8px 12px;
+
+        color: white;
+
+        background: none;
+
+        border: 2px solid white;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.208);
+        cursor: pointer;
+
+        transition: box-shadow .2s ease-in-out, transform .2s ease-in-out, color .2s ease-in-out, border .2s ease-in-out;
+
+        &:focus {
+            color: #00ff00bd;
+
+            outline: none;
+            border-color: #00ff00bd;
+            box-shadow: 0px 0px 15px rgba(0, 255, 47, 0.539);
+            transform: scale(1.05);
+        }
+        &:hover {
+            color: #00ff00bd;
+
+            border-color: #00ff00bd;
+            box-shadow: 0px 0px 15px rgba(0, 255, 47, 0.539);
+            transform: scale(1.05);
+        }
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}
+
+.popup-game-over {
+    background: none;
+
+    &__content {
+        padding: 20px 10px;
+
+        border: 2px solid white;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.208);
+        background-color: #0000009e;
+        backdrop-filter: blur(10px);
+
+        animation: open .5s forwards ease-in-out;
+    }
+}
+
+@keyframes open {
+    from {
+        transform: scale(0);
+        opacity: 0;
     }
 }
